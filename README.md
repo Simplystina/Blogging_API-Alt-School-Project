@@ -44,10 +44,14 @@ This is my submission for my alt school exam project for the backend school of e
 |---|---|---|
 |  id |  string |  required |
 |  state | number  |  required,default:1|
-|  state |  string |  required, default: user, enum: ['draft', 'published'] |
+|  title |  string |  required, unique|
 |  created_at |  date |  required |
 |  updated_at |  date |  required |
-
+|  author   | ObjectId  | 
+|   tags  |  array  | String|
+|  reading_time  |  |String |
+|  body    |  String  |
+|  read_count | String |
 
 
 
@@ -65,7 +69,7 @@ This is my submission for my alt school exam project for the backend school of e
   "password": "Password1",
   "firstname": "jon",
   "lastname": "doe",
-  "username": 'jon_doe",
+
 }
 ```
 
@@ -92,7 +96,7 @@ Success
 - Body: 
 ```
 {
-  "password": "Password1",
+  "email": "doe@example.com",
   "username": 'jon_doe",
 }
 ```
@@ -101,14 +105,24 @@ Success
 
 Success
 ```
+
 {
-    message: 'Login successful',
-    token: 'sjlkafjkldsfjsd'
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+  "user": {
+    "_id": "6363f44a47cce910a0f2b148",
+    "email": "dinma@gmail.com",
+    "firstName": "chinma",
+    "lastName": "chinma",
+    "password": "$2b$10$pNsUp6Z9SQTdgrwD6NwiQuXWjrMyatwaPgAYgQX7rPPpHQvfxdyfC",
+    "createdAt": "2022-11-03T17:03:06.905Z",
+    "updatedAt": "2022-11-03T17:03:06.905Z",
+    "__v": 0
+  }
 }
 ```
 
 ---
-### Create Order
+### Post Blog
 
 - Route: /orders
 - Method: POST
@@ -117,7 +131,16 @@ Success
 - Body: 
 ```
 {
-    items: [{ name: 'chicken pizza', price: 900, size: 'm', quantity: 1}]
+  "title": "Dinma at Google",
+  "description": "Her Journey to google",
+ 
+  "body": "or Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+  "tags":[
+    "Dinma",
+    "Google",
+    "started"
+    
+    ]
 }
 ```
 
@@ -126,16 +149,34 @@ Success
 Success
 ```
 {
-    state: 1,
-    total_price: 900,
-    created_at: Mon Oct 31 2022 08:35:00 GMT+0100,
-    items: [{ name: 'chicken pizza', price: 900, size: 'm', quantity: 1}]
+  "message": "Blog created successfully",
+  "status": true,
+  "userId": "6363f44a47cce910a0f2b148",
+  "blog": {
+    "title": "Dinma at Apple",
+    "description": "Her Journey to Apple",
+    "author": "6363f44a47cce910a0f2b148",
+    "state": "draft",
+    "read_count": 1,
+    "userId": "6363f44a47cce910a0f2b148",
+    "tags": [
+      "Dinma",
+      "Google",
+      "started"
+    ],
+    "reading_time": "20mins",
+    "body": "or Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+    "_id": "6367e0cb9f90abb8957a2d3d",
+    "createdAt": "2022-11-06T16:28:59.888Z",
+    "updatedAt": "2022-11-06T16:28:59.888Z",
+    "__v": 0
+  }
 }
 ```
----
-### Get Order
 
-- Route: /orders/:id
+---
+### Get all Published Blogs
+- Route: /blogs
 - Method: GET
 - Header
     - Authorization: Bearer {token}
@@ -144,40 +185,318 @@ Success
 Success
 ```
 {
-    state: 1,
-    total_price: 900,
-    created_at: Mon Oct 31 2022 08:35:00 GMT+0100,
-    items: [{ name: 'chicken pizza', price: 900, size: 'm', quantity: 1}]
+  "message": "All data retrieved successfully",
+  "status": true,
+  "Blogs": [
+    {
+      "_id": "6367d948091d180b2c857f6a",
+      "title": "Programming paradigm",
+      "description": "Python extensively",
+      "author": {
+        "_id": "6363f44a47cce910a0f2b148",
+        "email": "dinma@gmail.com",
+        "firstName": "chinma",
+        "lastName": "chinma",
+        "password": "$2b$10$pNsUp6Z9SQTdgrwD6NwiQuXWjrMyatwaPgAYgQX7rPPpHQvfxdyfC",
+        "createdAt": "2022-11-03T17:03:06.905Z",
+        "updatedAt": "2022-11-03T17:03:06.905Z",
+        "__v": 0
+      },
+      "state": "published",
+      "read_count": 2,
+      "userId": "6363f44a47cce910a0f2b148",
+      "tags": [
+        "python",
+        "opensource",
+        "dragnet"
+      ],
+      "reading_time": "20mins",
+      "body": "or Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+      "createdAt": "2022-11-06T15:56:56.402Z",
+      "updatedAt": "2022-11-06T16:06:29.083Z",
+      "__v": 0
+    }
+  ]
+}
+
+```
+
+---
+### Get a single blog
+
+- Route: /blog/:id
+- Method: GET
+- Header
+    - Authorization: Bearer {token}
+- Responses
+
+Success
+```
+{
+  "message": "Record Fetched successfully",
+  "status": true,
+  "Blog": {
+    "_id": "6367d948091d180b2c857f6a",
+    "title": "Programming paradigm",
+    "description": "Python extensively",
+    "author": {
+      "_id": "6363f44a47cce910a0f2b148",
+      "email": "dinma@gmail.com",
+      "firstName": "chinma",
+      "lastName": "chinma",
+      "password": "$2b$10$pNsUp6Z9SQTdgrwD6NwiQuXWjrMyatwaPgAYgQX7rPPpHQvfxdyfC",
+      "createdAt": "2022-11-03T17:03:06.905Z",
+      "updatedAt": "2022-11-03T17:03:06.905Z",
+      "__v": 0
+    },
+    "state": "published",
+    "read_count": 3,
+    "userId": "6363f44a47cce910a0f2b148",
+    "tags": [
+      "python",
+      "opensource",
+      "dragnet"
+    ],
+    "reading_time": "20mins",
+    "body": "or Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+    "createdAt": "2022-11-06T15:56:56.402Z",
+    "updatedAt": "2022-11-06T16:35:55.107Z",
+    "__v": 0
+  }
 }
 ```
 ---
 
-### Get Orders
+### Get each users blogs (This endpoint returns the blogs for each logged user)
 
-- Route: /orders
+- Route: /blog
 - Method: GET
 - Header:
     - Authorization: Bearer {token}
 - Query params: 
     - page (default: 1)
     - per_page (default: 10)
-    - order_by (default: created_at)
-    - order (options: asc | desc, default: desc)
-    - state
-    - created_at
+    - state  (either draft or published)
 - Responses
 
 Success
 ```
 {
-    state: 1,
-    total_price: 900,
-    created_at: Mon Oct 31 2022 08:35:00 GMT+0100,
-    items: [{ name: 'chicken pizza', price: 900, size: 'm', quantity: 1}]
+  "message": "Successfully retrieved fully",
+  "status": true,
+  "blog": [
+    {
+      "_id": "6367d948091d180b2c857f6a",
+      "title": "Programming paradigm",
+      "description": "Python extensively",
+      "author": {
+        "_id": "6363f44a47cce910a0f2b148",
+        "email": "dinma@gmail.com",
+        "firstName": "chinma",
+        "lastName": "chinma",
+        "password": "$2b$10$pNsUp6Z9SQTdgrwD6NwiQuXWjrMyatwaPgAYgQX7rPPpHQvfxdyfC",
+        "createdAt": "2022-11-03T17:03:06.905Z",
+        "updatedAt": "2022-11-03T17:03:06.905Z",
+        "__v": 0
+      },
+      "state": "published",
+      "read_count": 3,
+      "userId": "6363f44a47cce910a0f2b148",
+      "tags": [
+        "python",
+        "opensource",
+        "dragnet"
+      ],
+      "reading_time": "20mins",
+      "body": "or Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+      "createdAt": "2022-11-06T15:56:56.402Z",
+      "updatedAt": "2022-11-06T16:35:55.107Z",
+      "__v": 0
+    },
+    {
+      "_id": "6367da7d7487ce61a963facd",
+      "title": "Programming in a whole",
+      "description": "Programming topics extensively",
+      "author": {
+        "_id": "6363f44a47cce910a0f2b148",
+        "email": "dinma@gmail.com",
+        "firstName": "chinma",
+        "lastName": "chinma",
+        "password": "$2b$10$pNsUp6Z9SQTdgrwD6NwiQuXWjrMyatwaPgAYgQX7rPPpHQvfxdyfC",
+        "createdAt": "2022-11-03T17:03:06.905Z",
+        "updatedAt": "2022-11-03T17:03:06.905Z",
+        "__v": 0
+      },
+      "state": "draft",
+      "read_count": 1,
+      "userId": "6363f44a47cce910a0f2b148",
+      "tags": [
+        "progra",
+        "programming",
+        "opensource",
+        "dragnet"
+      ],
+      "reading_time": "20mins",
+      "body": "or Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+      "createdAt": "2022-11-06T16:02:05.316Z",
+      "updatedAt": "2022-11-06T16:02:05.316Z",
+      "__v": 0
+    },
+    {
+      "_id": "6367dacc7487ce61a963fad1",
+      "title": "Exceptional Women in tech",
+      "description": "Women in tech",
+      "author": {
+        "_id": "6363f44a47cce910a0f2b148",
+        "email": "dinma@gmail.com",
+        "firstName": "chinma",
+        "lastName": "chinma",
+        "password": "$2b$10$pNsUp6Z9SQTdgrwD6NwiQuXWjrMyatwaPgAYgQX7rPPpHQvfxdyfC",
+        "createdAt": "2022-11-03T17:03:06.905Z",
+        "updatedAt": "2022-11-03T17:03:06.905Z",
+        "__v": 0
+      },
+      "state": "draft",
+      "read_count": 1,
+      "userId": "6363f44a47cce910a0f2b148",
+      "tags": [
+        "Adaora",
+        "programming",
+        "dinma"
+      ],
+      "reading_time": "20mins",
+      "body": "or Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+      "createdAt": "2022-11-06T16:03:24.878Z",
+      "updatedAt": "2022-11-06T16:03:24.878Z",
+      "__v": 0
+    },
+    {
+      "_id": "6367daf67487ce61a963fad3",
+      "title": "Dinma at Google",
+      "description": "Her Journey to google",
+      "author": {
+        "_id": "6363f44a47cce910a0f2b148",
+        "email": "dinma@gmail.com",
+        "firstName": "chinma",
+        "lastName": "chinma",
+        "password": "$2b$10$pNsUp6Z9SQTdgrwD6NwiQuXWjrMyatwaPgAYgQX7rPPpHQvfxdyfC",
+        "createdAt": "2022-11-03T17:03:06.905Z",
+        "updatedAt": "2022-11-03T17:03:06.905Z",
+        "__v": 0
+      },
+      "state": "draft",
+      "read_count": 1,
+      "userId": "6363f44a47cce910a0f2b148",
+      "tags": [
+        "Dinma",
+        "Google",
+        "started"
+      ],
+      "reading_time": "20mins",
+      "body": "or Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+      "createdAt": "2022-11-06T16:04:06.190Z",
+      "updatedAt": "2022-11-06T16:04:06.190Z",
+      "__v": 0
+    },
+    {
+      "_id": "6367e0cb9f90abb8957a2d3d",
+      "title": "Dinma at Apple",
+      "description": "Her Journey to Apple",
+      "author": {
+        "_id": "6363f44a47cce910a0f2b148",
+        "email": "dinma@gmail.com",
+        "firstName": "chinma",
+        "lastName": "chinma",
+        "password": "$2b$10$pNsUp6Z9SQTdgrwD6NwiQuXWjrMyatwaPgAYgQX7rPPpHQvfxdyfC",
+        "createdAt": "2022-11-03T17:03:06.905Z",
+        "updatedAt": "2022-11-03T17:03:06.905Z",
+        "__v": 0
+      },
+      "state": "draft",
+      "read_count": 1,
+      "userId": "6363f44a47cce910a0f2b148",
+      "tags": [
+        "Dinma",
+        "Google",
+        "started"
+      ],
+      "reading_time": "20mins",
+      "body": "or Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+      "createdAt": "2022-11-06T16:28:59.888Z",
+      "updatedAt": "2022-11-06T16:28:59.888Z",
+      "__v": 0
+    }
+  ]
 }
 ```
 ---
+### Update a blog (You can pass in any of the parameters as a body to update it.)
+### Passing in the state parameter publishes the blog
 
+- Route: /blog/:id
+- Method: PUT
+- Header
+    - Authorization: Bearer {token}
+- Responses
+
+- Body:  (e.g if I choose to publish my blog)
+```
+{
+  - Body: 
+```
+{
+  "state": "published",
+}
+```
+}
+```
+
+Success
+```
+{
+  "message": "Data updated successfully",
+  "status": true,
+  "blog": {
+    "_id": "6367dacc7487ce61a963fad1",
+    "title": "Exceptional Women in tech",
+    "description": "Women in tech",
+    "author": "6363f44a47cce910a0f2b148",
+    "state": "published",
+    "read_count": 1,
+    "userId": "6363f44a47cce910a0f2b148",
+    "tags": [
+      "Adaora",
+      "programming",
+      "dinma"
+    ],
+    "reading_time": "20mins",
+    "body": "or Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+    "createdAt": "2022-11-06T16:03:24.878Z",
+    "updatedAt": "2022-11-06T16:50:13.503Z",
+    "__v": 0
+  }
+}
+```
+
+---
+### Delete a blog 
+
+- Route: /blog/:id
+- Method: Deleted
+- Header
+    - Authorization: Bearer {token}
+- Responses
+
+
+```
+
+Success
+```
+{
+  "message": "Blog deleted successfully",
+  "status": true,
+}
+```
 ...
 
 ## Contributor
