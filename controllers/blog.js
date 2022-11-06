@@ -4,25 +4,28 @@ const UserModel  = require("../models/users")
 
 exports.createBlog = async (req,res)=>{
     try {
-        const body = req.body;
-      body.userId = req.user._id
-      body.author = req.user._id
-      const time = body.description.split(' ').length
+      const data = req.body;
+      data.userId = req.user._id
+      data.author = req.user._id
+      const time = data.body.split(' ').length
       const reading_time = time >=30? "20mins": reading_time>=20?"10mins" : reading_time>=10? "5mins": "2mins"
-      body.reading_time = reading_time
-      body.read_count = 1
-     console.log(body)
-    const blog = await BlogModel.create(body)
+      data.reading_time = reading_time
+      data.read_count = 1
+    const blog = await BlogModel.create(data)
        
     return res.status(200).json({
         message:"Blog created successfully",
         status: true,
         userId: req.user._id,
-        Blog : blog
+        blog : blog
     })
     } catch (error) {
-        console.log(error)
-        res.send("Title already used")
+        if(error.keyPattern){
+          return res.status(404).send({message:" Title already used"})
+
+        }
+       
+        res.status(422).send({message:"Data entered is invalid"})
     }
 }
 
@@ -32,13 +35,14 @@ exports.getBlog = async (req,res)=>{
         const { id } = req.params;
         console.log(id)
         const result = await BlogModel.findById(id)
+        console.log(result, "result")
         result.read_count++
         await result.save()
         const data = await BlogModel.findById(id).populate("author")
         res.status(200).json({message:"Record Fetched successfully", status: true, Blog:data})
     } catch (error) {
         console.log(error)
-        res.status(500).send("Something went wrong")
+        res.status(500).send({message: "The id passed doesn't exist"})
     }
 }
 exports.getBlogs = async (req,res)=>{
@@ -125,7 +129,7 @@ exports.updateBlog = async(req,res)=>{
     try {
         const id = req.params.id
         const blog = req.body
-        console.log(id,blog,"iddddddd")
+        
         const update = await BlogModel.findByIdAndUpdate(id, blog, {new: true})
         res.status(200).json({message:"Data updated successfully", status: true, blog: update})
     } catch (error) {
@@ -137,7 +141,7 @@ exports.deleteBlog = async(req,res)=>{
     try {
         const id = req.params.id
         const result = await BlogModel.findByIdAndDelete(id)
-        res.status(200).json({message:"Data deleted successfully", status: true})
+        res.status(200).json({message:"Blog deleted successfully", status: true})
     } catch (error) {
         res.status(500).send(error)
         

@@ -14,7 +14,11 @@ const BlogSchema = new Schema(
         tags: [{
         type: String,
         }],
-        reading_time: {type: String}
+        reading_time: {type: String},
+        body:{
+          type:String, required: true
+        },
+        
   
   },
   {

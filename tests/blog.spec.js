@@ -9,12 +9,13 @@ const UserModel = require('../models/users')
 describe('Blog Route', () => {
     let conn;
     let token;
+    let createdBlogId;
 
     beforeAll(async () => {
         conn = await connect()
 
-        await UserModel.create({ email: 'tobi@mail', password: '123456'});
-
+      const response =  await UserModel.create({ email: 'tobi@mail', password: '123456'});
+      
         const loginResponse = await request(app)
         .post('/login')
         .set('content-type', 'application/json')
@@ -34,20 +35,8 @@ describe('Blog Route', () => {
         await conn.disconnect()
     })
 
-    it('should return Blogs', async () => {
+    it('should return all published Blogs', async () => {
         // create Blog in our db
-        await BlogModel.create(
-        {
-            title: "Importance of sleeping well",
-            description: "Find the lowest price for Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
-            
-            state:"draft",
-            tags:[
-              "food",
-              "eat",
-              "well"
-              ]
-          })
 
        
 
@@ -60,62 +49,69 @@ describe('Blog Route', () => {
         expect(response.body).toHaveProperty('Blogs')
         expect(response.body).toHaveProperty('status', true)
     }),
+    it('should post blogs', async() =>{
+          const response = await request(app).post("/blog")
+          .send(
+            {
+                    title: "Lowest time arrival",
+                    description: "Find the lowest price ",
+                    body:"Find the lowest price for Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
+                    state:"draft",
+                    tags:[
+                      "food",
+                      "eat",
+                      "well"
+                      ]
+            }).set('content-type', 'application/json')
+            .set('Authorization', `Bearer ${token}`)
+             createdBlogId = response.body.blog._id
+             expect(response.status).toBe(200)
+             expect(response.body).toHaveProperty('blog')
+            expect(response.body).toHaveProperty('status', true)
+            
+        
+    }
+
+    ),
 
     it('should return Blogs for a particular user', async () => {
-        // create Blog in our db
-        await BlogModel.create(
-        {
-            title: "Importance of sleeping well",
-            description: "Find the lowest price for Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
-            
-            state:"draft",
-            tags:[
-              "food",
-              "eat",
-              "well"
-              ]
-          })
-
        
 
         const response = await request(app)
         .get('/blog')
         .set('content-type', 'application/json')
         .set('Authorization', `Bearer ${token}`)
-
         expect(response.status).toBe(200)
         expect(response.body).toHaveProperty('blog')
         expect(response.body).toHaveProperty('status', true)
     }),
-    it('should return update Blogs', async () => {
-        // Update a field in our database
-        await BlogModel.create(
-        {
-            title: "Importance of excercises",
-            description: "Find the lowest price for Computer Science Boot Camp today! Now on sale at GigaPromo. GigaPromo is the website to compare Computer Science Boot Camp. Search and save now! Cheap Prices. Compare Simply. Large Selection. Compare Online. Always Sale. The Best Price. Save Online.",
-            
-            state:"draft",
-            tags:[
-              "food",
-              "eat",
-              "well"
-              ]
-          })
 
+    it('should update Blog PATCH /blog/:id', async () => {
+        // Update a field in our database
        
 
-        const response = await request(app)
-        
-        .get('/blog/:id')
+        const response = await request(app).put(`/blog/${createdBlogId}`)
         .set('content-type', 'application/json')
         .set('Authorization', `Bearer ${token}`)
-        .query({})
-
         expect(response.status).toBe(200)
-        expect(response.body).toHaveProperty('Blogs')
+        expect(response.body).toHaveProperty('blog')
         expect(response.body).toHaveProperty('status', true)
     })
+    ,
 
-
+   it('should delete Blog /blog/:id', async () => {
+        // Update a field in our database
+        
+              
+        
+        const response = await request(app).delete(`/blog/${createdBlogId}`)
+        
+        .set('content-type', 'application/json')
+        .set('Authorization', `Bearer ${token}`)
+        expect(response.status).toBe(200)
+        expect(response.body).toHaveProperty('message',"Blog deleted successfully")
+        expect(response.body).toHaveProperty('status', true)
+    })
+     
     
 });
