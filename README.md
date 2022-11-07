@@ -1,6 +1,6 @@
 # Blog App
 This is an api for a blog app
-This is my submission for my alt school exam project for the backend school of engineering. The whole assignment question can be found here.
+This is my submission for my alt school exam project for the backend school of engineering. The whole assignment question can be found [here](https://docs.google.com/document/d/1JcWAqdvStGYaoKGhw7nRcGx3JAeGmCQziqzIQIF20jM/edit).
 
 ---
 
@@ -12,7 +12,7 @@ This is my submission for my alt school exam project for the backend school of e
 5. Users should be able to create blogs
 6. Users should be able to update and delete blogs
 7. Test application
-8. More specific requirements can be found in the document here
+8. More specific requirements can be found in the document [here](https://docs.google.com/document/d/1JcWAqdvStGYaoKGhw7nRcGx3JAeGmCQziqzIQIF20jM/edit)
 ---
 ## Setup
 - Install NodeJS, mongodb
@@ -22,7 +22,7 @@ This is my submission for my alt school exam project for the backend school of e
 
 ---
 ## Base URL
-- somehostsite.com
+- https://altschool-blog-api.cyclic.app
 
 
 ## Models
@@ -31,8 +31,7 @@ This is my submission for my alt school exam project for the backend school of e
 ### User
 | field  |  data_type | constraints  |
 |---|---|---|
-|  id |  string |  required |
-
+|  id        |  string |  required |
 |  firstname | string  |  optional|
 |  lastname  |  string |  optional  |
 |  email     | string  |  required |
