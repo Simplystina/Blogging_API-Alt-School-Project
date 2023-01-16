@@ -2,6 +2,7 @@ const BlogModel = require("../models/blog")
 const moment = require('moment')
 const UserModel  = require("../models/users")
 
+
 exports.createBlog = async (req,res)=>{
     try {
       const data = req.body;
