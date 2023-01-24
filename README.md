@@ -2,6 +2,8 @@
 This is an api for a blog app
 This is my submission for my alt school exam project for the backend school of engineering. The whole assignment question can be found [here](https://docs.google.com/document/d/1JcWAqdvStGYaoKGhw7nRcGx3JAeGmCQziqzIQIF20jM/edit).
 
+This is the link to the postman documentation [here](https://documenter.getpostman.com/view/19697282/2s8ZDbX1Za)
+
 ---
 
 ## Requirements
